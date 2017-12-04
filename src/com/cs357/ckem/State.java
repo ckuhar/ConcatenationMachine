@@ -24,6 +24,14 @@ public class State
     }
 
     /**
+     * dummy constructor because I don't have the values yet
+     */
+    public State(String n)
+    {
+        name = n;
+    }
+
+    /**
      * just your standard copy constructor
      * @param src the state we want to copy
      */
@@ -42,6 +50,41 @@ public class State
     public ArrayList<Transition> getTransList()
     {
         return transList;
+    }
+
+    /**
+     * setting the transitions for the state
+     * @param t
+     */
+    public void setTransList( ArrayList<Transition> t )
+    {
+        transList = copy( t );
+    }
+
+    /**
+     * adds the transition to a state (given by the name of the state
+     * @param dest
+     */
+    public void addTransition( String dest, char[] alphabet )
+    {
+        transList.add( new Transition( dest, alphabet ));
+    }
+
+    /**
+     * returns the transition that goes to the state named
+     * @param dest name of the destination state
+     * @return tranition to that state
+     */
+    public Transition getTransition( String dest )
+    {
+        for( Transition t : transList )
+        {
+            if( t.getDest().equals( dest ) )
+            {
+                return t;
+            }
+        }
+        return null;
     }
 
     /**
@@ -69,6 +112,14 @@ public class State
     public int[] getCoordinates()
     {
         return coordinates;
+    }
+
+    /**
+     * makes the state as an accept state
+     */
+    public void makeAcceptState()
+    {
+        isAcceptState = true;
     }
 
 
