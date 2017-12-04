@@ -2,6 +2,8 @@ package com.cs357.ckem;
 
 import java.awt.*;
 import java.util.ArrayList;
+import javax.swing.*;
+import java.text.*;
 
 public class State
 {
@@ -189,8 +191,8 @@ public class State
      * draws the state
      * @param canvas
      */
-    private static void drawState( Canvas canvas )
+    private static void drawTransitions( Graphics canvas )
     {
-
+        canvas.drawOval( 100,100,100,100 );
     }
 }

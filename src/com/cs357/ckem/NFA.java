@@ -1,6 +1,7 @@
 package com.cs357.ckem;
 
 import java.util.ArrayList;
+//import java.awt.*;
 
 public class NFA
 {
@@ -231,4 +232,5 @@ public class NFA
         }
         return "NFA incomplete";
     }
+
 }

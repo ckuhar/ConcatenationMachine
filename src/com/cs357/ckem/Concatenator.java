@@ -1,6 +1,9 @@
 package com.cs357.ckem;
 
+import sun.awt.resources.awt;
+
 import java.awt.*;
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,11 +15,13 @@ public class Concatenator
     private NFA nfa1;
     private NFA nfa2;
     private NFA concatnfa;
-    private Canvas canvas;
+    //private Canvas canvas;
 
     public static void main( String[] args )
     {
+
         Concatenator c = new Concatenator();
+
 
         // The name of the file to open.
         String fileName = args[0];
@@ -30,9 +35,8 @@ public class Concatenator
         //concatenate the two nfas
         c.concatenateNFA();
 
-        //draws the resulting NFA
-        c.draw();
-
+        //print concat
+        c.printConcat();
     }
 
     /**
@@ -44,6 +48,8 @@ public class Concatenator
         nfa2 = new NFA();
         concatnfa = new NFA();
     }
+
+
 
     /**
      * concatenates nfa1 and nfa2
@@ -258,13 +264,6 @@ public class Concatenator
         }
     }
 
-    /**
-     * Draws the resulting NFA
-     */
-    private void draw()
-    {
-        System.out.println( concatnfa.toString() );
-    }
 
     /**
      * Prints the two source nfas (for testing)
@@ -273,5 +272,13 @@ public class Concatenator
     {
         System.out.println( nfa1.toString() );
         System.out.println( nfa2.toString() );
+    }
+
+    /**
+     * prints concatenated string
+     */
+    private void printConcat()
+    {
+        System.out.println( concatnfa.toString() );
     }
 }
