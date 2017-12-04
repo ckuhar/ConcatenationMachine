@@ -53,6 +53,9 @@ public class Concatenator
         //copy nfa1 to concatnfa
         concatnfa = new NFA( nfa1 );
 
+        //add empty string to alphabet
+        concatnfa.appendAlphabet( 'ε' );
+
         //make transition from nfa1 accept states to start state for nfa2
         //and make concatnfa states no longer accepting
         for( State s: concatnfa.getStates() )

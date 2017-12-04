@@ -197,7 +197,35 @@ public class NFA
                 }
             }
 
-            str = str + "}}";
+            str = str + "}}\ndelta:";
+
+            for( int i = 0; i < alphabet.length; i++ )
+            {
+                if( i == 0 )
+                {
+                    str = str + alphabet[i];
+                }
+                else
+                {
+                    str = str + "," + alphabet[i];
+                }
+            }
+
+            //counting amount of alphabet chars we've encountered
+            int count = 0;
+
+            //printing the delta table
+            for( State s : states )
+            {
+                str = str + "\n" + s.getName();
+                for( Transition t : s.getTransList() )
+                {
+                    for( int i = 0; i < t.getAlphabet().length; i++ )
+                    {
+                        str = str + "," + t.getDest();
+                    }
+                }
+            }
 
             return str;
         }

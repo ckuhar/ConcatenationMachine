@@ -77,6 +77,15 @@ public class Transition
     }
 
     /**
+     * get the alphabet
+     * @return alphabet of the transition
+     */
+    public char[] getAlphabet()
+    {
+        return alphabet;
+    }
+
+    /**
      * simply copies over elements of a char array
      * @param src array to copy elements from
      * @return
