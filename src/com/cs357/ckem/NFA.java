@@ -22,7 +22,7 @@ public class NFA
 
     public NFA( NFA n )
     {
-        states = n.getStates();
+        states = copy(n.getStates());
         startState = n.getStartState();
         alphabet = n.getAlphabet();
     }
@@ -155,17 +155,16 @@ public class NFA
         String str = "{{";
         if ( states.size() > 0 )
         {
-            if( startState != null )
-            {
-                //start state
-                str = str + "}," + startState.getName() + "{";
-            }
-
             State firstS = states.get( 0 );
+            State firstAS = states.get( 0 );
 
             //putting in set of states
             for ( State s : states )
             {
+                if( s.isAcceptState() && !firstAS.isAcceptState() )
+                {
+                    firstAS = s;
+                }
                 if ( firstS.equals( s ) )
                 {
                     str = str + s.getName();
@@ -176,12 +175,18 @@ public class NFA
                 }
             }
 
+            if( startState != null )
+            {
+                //start state
+                str = str + "}," + startState.getName() + ",{";
+            }
+
             //set of accepting states
             for ( State s : states )
             {
                 if ( s.isAcceptState() )
                 {
-                    if ( firstS.equals( s ) )
+                    if ( firstAS.equals( s ) )
                     {
                         str = str + s.getName();
                     }
