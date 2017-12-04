@@ -79,13 +79,15 @@ public class Concatenator
                 if ( line.charAt( 0 ) == 'd' )
                 {
                     //skipping over the world "delta:" in the file
-                    int i = 6;
-                    char ch = line.charAt( i );
                     delta1Reached = true;
 
+                    //char we're reading
+                    char ch;
+
                     //parsing rest of the line for additions to the alphabet
-                    while ( ch != '\n' )
+                    for( int i = 6; i < line.length(); i++ )
                     {
+                        ch = line.charAt( i );
                         if ( ch != ',' )
                         {
                             if ( !nfa1Done )
@@ -95,9 +97,15 @@ public class Concatenator
                             else
                             {
                                 nfa2.appendAlphabet( ch );
+                                delta2Reached = true;
                             }
                         }
                     }
+                    if( !nfa1Done )
+                    {
+                        nfa1Done = true;
+                    }
+                    continue;
                 }
                 //walk through each char in the line
                 for ( int i = 0; i < line.length(); i++ )
@@ -108,10 +116,6 @@ public class Concatenator
                     if ( c == '{' || c == '}' )
                     {
                         countCurlies++;
-                        if ( countCurlies == 6 )
-                        {
-                            nfa1Done = true;
-                        }
                     }
 
                     //we're reading the set of states
@@ -120,14 +124,13 @@ public class Concatenator
                         if ( c == ',' || c == '{' )
                         {
                             String sName = "" + line.charAt( i + 1 ) + line.charAt( i + 2 );
-                            State s = new State( sName );
                             if ( !nfa1Done )
                             {
-                                nfa1.addState( s );
+                                nfa1.addState( sName );
                             }
                             else
                             {
-                                nfa2.addState( s );
+                                nfa2.addState( sName );
                             }
                         }
                     }
@@ -164,9 +167,9 @@ public class Concatenator
                     }
                 }
                 //reading the delta table
-                if ( countCurlies == 6 || countCurlies == 12 )
+                if ( (countCurlies == 6 || countCurlies == 12 ) && line.charAt( 0 ) != 'd')
                 {
-                    if ( delta1Reached )
+                    if ( (delta1Reached && countCurlies == 6) || delta2Reached )
                     {
                         //how many symbols in the alphabet have we taken care of for the current state
                         int countCommas = 0;
@@ -198,14 +201,12 @@ public class Concatenator
                                 if ( !destname.equals( "" ) )
                                 {
                                     srcState.addTransition( destname, alphabet[countCommas] );
+                                    countCommas++;
                                 }
-
-                                countCommas++;
                             }
                         }
                     }
                 }
-                System.out.println( line );
             }
 
             // gotta always close files :)

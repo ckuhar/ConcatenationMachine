@@ -13,14 +13,11 @@ public class NFA
     {
         states = copy( theStates );
         startState = theStartState;
-        alphabet = new char[100];
     }
 
     public NFA()
     {
         states = new ArrayList<State>();
-        startState = new State( "dummystart" );
-        alphabet = new char[100];
     }
 
     /**
@@ -45,6 +42,12 @@ public class NFA
      */
     public void appendAlphabet( char c )
     {
+        if( alphabet == null )
+        {
+            alphabet = new char[1];
+            alphabet[0] = c;
+            return;
+        }
         char[] newA = new char[alphabet.length+1];
         for( int i = 0; i < alphabet.length; i++ )
         {
@@ -79,12 +82,25 @@ public class NFA
     }
 
     /**
+     * adds a state to the NFA
+     * @param name state being added
+     */
+    public void addState( String name )
+    {
+        State myS = new State( name );
+        states.add(myS);
+    }
+
+    /**
      * sets the start state for the NFA
      * @param name the name of the start state
      */
     public void setStartState( String name )
     {
-        startState = getState( name );
+        if( getState( name ) != null )
+        {
+            startState = getState( name );
+        }
     }
 
     /**
@@ -120,31 +136,20 @@ public class NFA
     public String toString()
     {
         String str = "{{";
-
-        State firstS = states.get(0);
-
-        //putting in set of states
-        for( State s : states )
+        if ( states.size() > 0 )
         {
-            if( firstS.equals( s ) )
+            if( startState != null )
             {
-                str = str + s.getName();
+                //start state
+                str = str + "}," + startState.getName() + "{";
             }
-            else
-            {
-                str = str + "," + s.getName();
-            }
-        }
 
-        //start state
-        str = str + "}," + startState.getName() + "{";
+            State firstS = states.get( 0 );
 
-        //set of accepting states
-        for( State s : states )
-        {
-            if( s.isAcceptState())
+            //putting in set of states
+            for ( State s : states )
             {
-                if( firstS.equals( s ) )
+                if ( firstS.equals( s ) )
                 {
                     str = str + s.getName();
                 }
@@ -153,10 +158,27 @@ public class NFA
                     str = str + "," + s.getName();
                 }
             }
+
+            //set of accepting states
+            for ( State s : states )
+            {
+                if ( s.isAcceptState() )
+                {
+                    if ( firstS.equals( s ) )
+                    {
+                        str = str + s.getName();
+                    }
+                    else
+                    {
+                        str = str + "," + s.getName();
+                    }
+                }
+            }
+
+            str = str + "}}";
+
+            return str;
         }
-
-        str = str + "}}";
-
-        return str;
+        return "NFA incomplete";
     }
 }

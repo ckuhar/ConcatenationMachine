@@ -37,9 +37,9 @@ public class State
      */
     public State( State src )
     {
+        name = src.getName();
         coordinates = src.getCoordinates();
         transList = src.getTransList();
-        name = src.getName();
         isAcceptState = src.isAcceptState;
     }
 
@@ -67,11 +67,21 @@ public class State
      */
     public void addTransition( String dest, char alphabet )
     {
+        //if the transition already exists, simply edit the alphabet
         if( transitionExists( dest ) )
         {
             getTransition( dest ).updateAlphabet( alphabet );
         }
-        transList.add( new Transition( dest, alphabet ));
+        else
+        {
+            //checks if transList is initialized and initializes it if it is not
+            if( transList == null )
+            {
+                transList = new ArrayList<>();
+            }
+            //add new transition
+            transList.add( new Transition( dest, alphabet ) );
+        }
     }
 
     /**
@@ -101,11 +111,14 @@ public class State
      */
     private boolean transitionExists( String dest )
     {
-        for( Transition t : transList )
+        if( transList != null )
         {
-            if( t.getDest().equals( dest ) )
+            for ( Transition t : transList )
             {
-                return true;
+                if ( t.getDest().equals( dest ) )
+                {
+                    return true;
+                }
             }
         }
         return false;
