@@ -81,7 +81,7 @@ public class Transition
      * @param src array to copy elements from
      * @return
      */
-    private static char[] copy( char[] src )
+    public static char[] copy( char[] src )
     {
         //initialize
         char[] dest = new char[src.length];

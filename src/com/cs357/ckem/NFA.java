@@ -8,15 +8,12 @@ public class NFA
     private ArrayList<State> states;
     private State startState;
     private char[] alphabet;
-    private int numAlphabet;
 
     public NFA( ArrayList<State> theStates, State theStartState )
     {
         states = copy( theStates );
         startState = theStartState;
         alphabet = new char[100];
-        numAlphabet = 0;
-
     }
 
     public NFA()
@@ -24,7 +21,6 @@ public class NFA
         states = new ArrayList<State>();
         startState = new State( "dummystart" );
         alphabet = new char[100];
-        numAlphabet = 0;
     }
 
     /**
@@ -49,8 +45,17 @@ public class NFA
      */
     public void appendAlphabet( char c )
     {
-        alphabet[numAlphabet] = c;
-        numAlphabet++;
+        char[] newA = new char[alphabet.length+1];
+        for( int i = 0; i < alphabet.length; i++ )
+        {
+            newA[i] = alphabet[i];
+        }
+
+        //add new char
+        newA[alphabet.length] = c;
+
+        //copy new array over
+        alphabet = Transition.copy( newA );
     }
 
     /**
@@ -62,14 +67,6 @@ public class NFA
         return alphabet;
     }
 
-    /**
-     * gett for number of chars in alphabet
-     * @return size of alphabet
-     */
-    public int getSizeAlphabet()
-    {
-        return numAlphabet;
-    }
 
     /**
      * adds a state to the NFA

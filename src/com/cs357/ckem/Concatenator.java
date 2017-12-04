@@ -163,10 +163,6 @@ public class Concatenator
                         }
                     }
                 }
-
-                /**
-                 * TODO: currently complains about null pointer at line 190? make a new transition if one doesn't exist
-                 */
                 //reading the delta table
                 if ( countCurlies == 6 || countCurlies == 12 )
                 {
@@ -232,5 +228,6 @@ public class Concatenator
     {
         System.out.println( "I do nothing \n I know nothing \n\t\t\t move along" );
         System.out.println( nfa1.toString() );
+        System.out.println( nfa2.toString() );
     }
 }
