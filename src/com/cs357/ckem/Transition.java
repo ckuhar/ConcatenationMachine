@@ -30,6 +30,18 @@ public class Transition
     }
 
     /**
+     * another constructor...imagine that
+     * @param str the name of the destination state
+     * @param abet the alphabet for the transition
+     */
+    public Transition( String str, char abet )
+    {
+        alphabet = new char[1];
+        alphabet[0] = abet;
+        dest = str;
+    }
+
+    /**
      * draws the transition according to the coordinates given
      * @param canvas the canvas we'll be drawing on
      * @param coor
@@ -61,6 +73,7 @@ public class Transition
 
         //add new char
         newAlphabet[alphabet.length] = c;
+        alphabet = copy( newAlphabet );
     }
 
     /**

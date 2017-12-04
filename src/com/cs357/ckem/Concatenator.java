@@ -41,6 +41,7 @@ public class Concatenator
 
     /**
      * reads a text file and stores the formal description of the DFAs
+     *
      * @param fileName the name of the file to be read
      */
     private void read( String fileName )
@@ -62,25 +63,32 @@ public class Concatenator
             //keeps track of which dfa we're reading
             boolean nfa1Done = false;
 
+            //tests if we are now in the delta table for nfa1
+            boolean delta1Reached = false;
+
+            //tests if we are now in the delta table for nfa2
+            boolean delta2Reached = false;
+
             /* TO DO:
             *           - change code in while loop to store data in the text file correctly
             *           - test files
             */
-            while( ( line = bufferedReader.readLine() ) != null )
+            while ( ( line = bufferedReader.readLine() ) != null )
             {
                 //reading the alphabet from delta table
-                if( line.charAt( 0 ) == 'd' )
+                if ( line.charAt( 0 ) == 'd' )
                 {
                     //skipping over the world "delta:" in the file
                     int i = 6;
                     char ch = line.charAt( i );
+                    delta1Reached = true;
 
                     //parsing rest of the line for additions to the alphabet
                     while ( ch != '\n' )
                     {
-                        if( ch != ',' )
+                        if ( ch != ',' )
                         {
-                            if( !nfa1Done )
+                            if ( !nfa1Done )
                             {
                                 nfa1.appendAlphabet( ch );
                             }
@@ -92,28 +100,28 @@ public class Concatenator
                     }
                 }
                 //walk through each char in the line
-                for (int i = 0; i < line.length(); i++)
+                for ( int i = 0; i < line.length(); i++ )
                 {
 
-                    char c = line.charAt(i);
+                    char c = line.charAt( i );
 
-                    if( c == '{'  || c == '}')
+                    if ( c == '{' || c == '}' )
                     {
                         countCurlies++;
-                        if( countCurlies == 6 )
+                        if ( countCurlies == 6 )
                         {
                             nfa1Done = true;
                         }
                     }
 
                     //we're reading the set of states
-                    if( countCurlies == 1 || countCurlies == 7 )
+                    if ( countCurlies == 1 || countCurlies == 7 )
                     {
-                        if( c == ',' || c == '{' )
+                        if ( c == ',' || c == '{' )
                         {
-                            String sName = "" + line.charAt( i+1 ) + line.charAt( i+2 );
+                            String sName = "" + line.charAt( i + 1 ) + line.charAt( i + 2 );
                             State s = new State( sName );
-                            if( !nfa1Done )
+                            if ( !nfa1Done )
                             {
                                 nfa1.addState( s );
                             }
@@ -125,10 +133,10 @@ public class Concatenator
                     }
 
                     //we're reading the start state
-                    else if( (countCurlies == 4 || countCurlies == 10 )&& c == ',' )
+                    else if ( ( countCurlies == 4 || countCurlies == 10 ) && c == ',' )
                     {
-                        String sName = "" + line.charAt( i+1 ) + line.charAt( i+2 );
-                        if( !nfa1Done )
+                        String sName = "" + line.charAt( i + 1 ) + line.charAt( i + 2 );
+                        if ( !nfa1Done )
                         {
                             nfa1.setStartState( sName );
                         }
@@ -139,12 +147,12 @@ public class Concatenator
                     }
 
                     //we're reading the set of accept states
-                    else if( countCurlies == 5 || countCurlies == 11 )
+                    else if ( countCurlies == 5 || countCurlies == 11 )
                     {
-                        if( c == ',' || c == '{' )
+                        if ( c == ',' || c == '{' )
                         {
-                            String sName = "" + line.charAt( i+1 ) + line.charAt( i+2 );
-                            if( !nfa1Done )
+                            String sName = "" + line.charAt( i + 1 ) + line.charAt( i + 2 );
+                            if ( !nfa1Done )
                             {
                                 nfa1.setAcceptState( sName );
                             }
@@ -157,62 +165,61 @@ public class Concatenator
                 }
 
                 /**
-                 * TODO: currently complains about null pointer at line 190?
+                 * TODO: currently complains about null pointer at line 190? make a new transition if one doesn't exist
                  */
                 //reading the delta table
-                if( countCurlies == 6 || countCurlies == 12 )
+                if ( countCurlies == 6 || countCurlies == 12 )
                 {
-                    //how many symbols in the alphabet have we taken care of for the current state
-                    int countCommas = 0;
-
-                    //source state for the transition
-                    String sname = "" + line.charAt( 0 ) + line.charAt( 1 );
-                    State srcState = nfa1.getState( sname );
-
-                    //alphabet for the NFA
-                    char[] alphabet = nfa1.getAlphabet();
-
-                    if( countCurlies == 12 )
+                    if ( delta1Reached )
                     {
-                        srcState = nfa2.getState( sname );
-                        alphabet = nfa2.getAlphabet();
-                    }
+                        //how many symbols in the alphabet have we taken care of for the current state
+                        int countCommas = 0;
 
-                    //we're going to go char by char
-                    for (int i = 0; i < line.length(); i++)
-                    {
-                        //destination state
-                        if( line.charAt( i ) == ',')
+                        //source state for the transition
+                        String sname = "" + line.charAt( 0 ) + line.charAt( 1 );
+                        State srcState = nfa1.getState( sname );
+
+                        //alphabet for the NFA
+                        char[] alphabet = nfa1.getAlphabet();
+
+                        if ( countCurlies == 12 )
                         {
-                            //name of the destination state
-                            String destname = "" + line.charAt( i+1 ) + line.charAt( i+2 );
+                            srcState = nfa2.getState( sname );
+                            alphabet = nfa2.getAlphabet();
+                        }
 
-                            if( srcState.getTransition( destname ) ==  null  )
+                        //we're going to go char by char
+                        for ( int i = 0; i < line.length(); i++ )
+                        {
+                            //destination state
+                            if ( line.charAt( i ) == ',' )
                             {
-                                char[] transAlphabet = { alphabet[countCommas] };
-                                srcState.addTransition( destname, transAlphabet );
+                                //name of the destination state
+                                String destname = "" + line.charAt( i + 1 ) + line.charAt( i + 2 );
+
+                                //add transition now automatically checks if that transition is already made
+                                //and just adds to the alphabet
+                                if ( !destname.equals( "" ) )
+                                {
+                                    srcState.addTransition( destname, alphabet[countCommas] );
+                                }
+
+                                countCommas++;
                             }
-                            else
-                            {
-                                //transition to destination state
-                                Transition toDest = srcState.getTransition( destname );
-                                toDest.updateAlphabet( alphabet[countCommas] );
-                            }
-                            countCommas++;
                         }
                     }
                 }
-                    System.out.println( line );
+                System.out.println( line );
             }
 
             // gotta always close files :)
             bufferedReader.close();
         }
-        catch( FileNotFoundException ex )
+        catch ( FileNotFoundException ex )
         {
             System.out.println( "Unable to open file '" + fileName + "'" );
         }
-        catch(IOException ex)
+        catch ( IOException ex )
         {
             System.out.println( "Error reading file '" + fileName + "'" );
         }

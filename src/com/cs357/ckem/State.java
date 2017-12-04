@@ -62,11 +62,15 @@ public class State
     }
 
     /**
-     * adds the transition to a state (given by the name of the state
-     * @param dest
+     * adds the transition to a state
+     * @param dest name of the state this transition goes to
      */
-    public void addTransition( String dest, char[] alphabet )
+    public void addTransition( String dest, char alphabet )
     {
+        if( transitionExists( dest ) )
+        {
+            getTransition( dest ).updateAlphabet( alphabet );
+        }
         transList.add( new Transition( dest, alphabet ));
     }
 
@@ -77,14 +81,34 @@ public class State
      */
     public Transition getTransition( String dest )
     {
+        if( transitionExists( dest ) )
+        {
+            for ( Transition t : transList )
+            {
+                if ( t.getDest().equals( dest ) )
+                {
+                    return t;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * tests if the transition exists in translist
+     * @param dest name of the destination state
+     * @return true if transition to destination state exists
+     */
+    private boolean transitionExists( String dest )
+    {
         for( Transition t : transList )
         {
             if( t.getDest().equals( dest ) )
             {
-                return t;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     /**
