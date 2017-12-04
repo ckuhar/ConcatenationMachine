@@ -24,6 +24,9 @@ public class Concatenator
         //get the formal description from the file
         c.read( fileName );
 
+        //concatenate the two nfas
+        c.concatenateNFA();
+
         //draws the resulting NFA
         c.draw();
 
@@ -37,6 +40,33 @@ public class Concatenator
         nfa1 = new NFA();
         nfa2 = new NFA();
         concatnfa = new NFA();
+    }
+
+    /**
+     * concatenates nfa1 and nfa2
+     */
+    public void concatenateNFA()
+    {
+        //make transition from nfa1 accept states to start state for nfa2
+        //and make concatnfa states no longer accepting
+        for( State s: nfa1.getStates() )
+        {
+            if( s.isAcceptState() )
+            {
+                s.addTransition( nfa2.getStartState().getName(), 'ε' );
+                s.makeRejectState();
+            }
+        }
+
+        //copy nfa1 to concatnfa
+        concatnfa = new NFA( nfa1 );
+
+        //add nfa2 states to concatnfa
+        for( State s : nfa2.getStates() )
+        {
+            concatnfa.addState( s );
+        }
+
     }
 
     /**
@@ -227,8 +257,8 @@ public class Concatenator
      */
     private void draw()
     {
-        System.out.println( "I do nothing \n I know nothing \n\t\t\t move along" );
         System.out.println( nfa1.toString() );
         System.out.println( nfa2.toString() );
+        System.out.println( concatnfa.toString() );
     }
 }

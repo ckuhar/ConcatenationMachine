@@ -20,6 +20,13 @@ public class NFA
         states = new ArrayList<State>();
     }
 
+    public NFA( NFA n )
+    {
+        states = n.getStates();
+        startState = n.getStartState();
+        alphabet = n.getAlphabet();
+    }
+
     /**
      * copies an ArrayList
      * @param src the arraylist we want to copy
@@ -81,6 +88,11 @@ public class NFA
         states.add(myS);
     }
 
+    public ArrayList<State> getStates()
+    {
+        return states;
+    }
+
     /**
      * adds a state to the NFA
      * @param name state being added
@@ -101,6 +113,11 @@ public class NFA
         {
             startState = getState( name );
         }
+    }
+
+    public State getStartState()
+    {
+        return startState;
     }
 
     /**

@@ -159,6 +159,14 @@ public class State
         isAcceptState = true;
     }
 
+    /**
+     * makes the state a reject state
+     */
+    public void makeRejectState()
+    {
+        isAcceptState = false;
+    }
+
 
     /**
      * copies an ArrayList
